@@ -13,7 +13,7 @@ use once_cell::unsync::Lazy;
 use serde::{Deserialize, Serialize};
 use tokio::net::TcpListener;
 
-const SECRET: &[u8] = b"some-secret";
+const SECRET: &[u8] = b"c917bf64-c0f4-4766-b27a-caa5a7dade7f";
 const ENCODING_KEY: Lazy<EncodingKey> = Lazy::new(|| EncodingKey::from_secret(SECRET));
 const DECODING_KEY: Lazy<DecodingKey> = Lazy::new(|| DecodingKey::from_secret(SECRET));
 
