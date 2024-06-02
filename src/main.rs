@@ -6,9 +6,9 @@ use axum::body::Body;
 use axum::http::{Request, StatusCode};
 use axum::middleware::Next;
 use axum::response::Response;
-use axum::routing::get;
 use axum::Router;
-use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, TokenData, Validation};
+use axum::routing::get;
+use jsonwebtoken::{decode, DecodingKey, encode, EncodingKey, Header, TokenData, Validation};
 use once_cell::unsync::Lazy;
 use serde::{Deserialize, Serialize};
 use tokio::net::TcpListener;
@@ -23,7 +23,7 @@ struct Claims {
     exp: u64,
 }
 
-fn generate_token() -> String {
+fn gen_token() -> String {
     let expiration = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
@@ -50,7 +50,7 @@ async fn handler<B: Debug>(request: Request<B>) -> String {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let token = generate_token();
+    let token = gen_token();
     println!("Generated Token: {}", token);
 
     let app = Router::new()
@@ -82,9 +82,9 @@ async fn auth(mut req: Request<Body>, next: Next) -> Result<Response, StatusCode
         .and_then(|token_data| {
             if token_data.claims.exp
                 > SystemTime::now()
-                    .duration_since(UNIX_EPOCH)
-                    .unwrap()
-                    .as_secs()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_secs()
             {
                 Some(token_data.claims)
             } else {
